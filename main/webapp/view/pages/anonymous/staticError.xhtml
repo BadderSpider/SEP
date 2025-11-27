@@ -1,0 +1,24 @@
+<ui:composition template="/view/main_view.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="title">
+        Fehler 404 - Seite nicht gefunden
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="static-error-container" style="text-align: center; padding-top: 50px;">
+            <h2>Error 404</h2>
+            <hr />
+            <p>
+                Die von Ihnen angeforderte Seite konnte leider nicht gefunden werden.
+            </p>
+            <br />
+            <p>
+                <h:link outcome="/view/pages/anonymous/rides.xhtml" value="Zurück zur Startseite" styleClass="btn btn-primary"/>
+            </p>
+        </div>
+    </ui:define>
+
+</ui:composition>

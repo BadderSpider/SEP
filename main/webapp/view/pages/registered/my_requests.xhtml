@@ -1,0 +1,178 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mb="http://xmlns.jcp.org/jsf/composite/components"> <body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <div class="my-requests-container">
+
+            <h2>
+                <h:outputText value="Gesuchverwaltung"
+                              rendered="#{userSessionBean.isAdmin}" />
+                <h:outputText value="Meine Mitfahrgesuche"
+                              rendered="#{not userSessionBean.isAdmin}" />
+            </h2>
+            <hr />
+
+            <h:link id="l_toCreateRequest"
+                    outcome="/view/facelets/registered/request_form.xhtml"
+                    rendered="#{userSessionBean.isLoggedIn}"
+                    styleClass="button-primary">
+                Neues Gesuch erstellen
+            </h:link>
+
+            <br /><br />
+
+            <mb:pagedTable id="pt_myRequests"
+                           bean="#{myRequestsBean}">
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRequestsBean}"
+                                        columnId="startAddress"
+                                        title="Start" />
+                    </f:facet>
+                    <h:outputText value="#{item.start}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRequestsBean}"
+                                        columnId="destination"
+                                        title="Ziel" />
+                    </f:facet>
+                    <h:outputText value="#{item.destination}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRequestsBean}"
+                                        columnId="desiredTime"
+                                        title="Datum" />
+                    </f:facet>
+                    <h:outputText value="#{item.desiredTime}">
+                        <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column rendered="#{userSessionBean.isAdmin}">
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRequestsBean}"
+                                        columnId="user"
+                                        title="Nutzer"
+                                        rendered="#{userSessionBean.isAdmin}" />
+                    </f:facet>
+                    <h:outputText value="#{item.requesterId}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Aktionen</f:facet>
+
+                    <h:link id="l_editRequest"
+                            outcome="/view/facelets/registered/request_form.xhtml"
+                            styleClass="button-edit">
+                        Bearbeiten
+                        <f:param name="reqId" value="#{item.requestId}" />
+                    </h:link>
+
+                    <h:commandButton id="cb_showOffers"
+                                     value="Angebote anzeigen"
+                                     action="#{myRequestsBean.showOffers(item)}">
+                        <f:ajax render=":offersDialog" />
+                    </h:commandButton>
+
+                    <h:commandButton id="cb_deleteRequest"
+                                     value="Löschen"
+                                     action="#{myRequestsBean.deleteRequest(item)}"
+                                     immediate="true"
+                                     styleClass="button-danger"
+                                     onclick="return confirm('Soll dieses Gesuch wirklich gelöscht werden?');">
+                        <f:ajax render="@form" />
+                    </h:commandButton>
+                </h:column>
+
+            </mb:pagedTable>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+<h:panelGroup id="offersDialog"
+              layout="block"
+              styleClass="modal-dialog-wrapper"
+              rendered="#{myRequestsBean.currentOffers != null}">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-content">
+        <h3>Eingegangene Angebote</h3>
+        <hr />
+
+        <h:form id="offersDialogForm">
+
+            <h:dataTable id="dt_offers"
+                         value="#{myRequestsBean.currentOffers}"
+                         var="offer"
+                         styleClass="data-table">
+
+                <h:column>
+                    <f:facet name="header">Anbieter</f:facet>
+                    <h:outputText id="o_offer_provider" value="#{offer.rideId}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Fahrt-Details</f:facet>
+                    <h:outputText id="o_offer_details" value="#{offer.rideId}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    <h:outputText id="o_offer_status" value="#{offer.status}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Aktion</f:facet>
+
+                    <h:commandButton id="cb_acceptOffer"
+                                     value="Annehmen"
+                                     action="#{myRequestsBean.acceptOffer(offer)}"
+                                     rendered="#{offer.status == 'OPEN'}"
+                                     styleClass="button-success">
+                        <f:ajax render=":offersDialogForm" />
+                    </h:commandButton>
+
+                    <h:commandButton id="cb_rejectOffer"
+                                     value="Ablehnen"
+                                     action="#{myRequestsBean.rejectOffer(offer)}"
+                                     rendered="#{offer.status == 'OPEN'}"
+                                     styleClass="button-danger">
+                        <f:ajax render=":offersDialogForm" />
+                    </h:commandButton>
+                </h:column>
+
+            </h:dataTable>
+
+            <hr />
+            <h:commandButton value="Schließen"
+                             action="#{myRequestsBean.closeOffersDialog()}"
+                             immediate="true">
+                <f:ajax render=":offersDialog" />
+            </h:commandButton>
+
+        </h:form>
+    </div>
+</h:panelGroup>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mb="http://xmlns.jcp.org/jsf/composite/components">
+
+<ui:composition template="/view/main_view.xhtml">
+
+    <ui:define name="title">#{msg['ride.search.title']}</ui:define>
+
+    <ui:define name="content">
+
+        <div class="container rides-overview-container">
+            <h3 class="text-center">#{msg['ride.search.title']}</h3>
+            <hr />
+
+            <mb:pagedTable bean="#{ridesBean}">
+
+                <!-- Start -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.start']}" columnId="startAddress"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText value="#{item.stops.get(0).location}" rendered="#{not empty item.stops.get(0).location}" />
+                    </h:link>
+                </h:column>
+
+                <!-- Ziel -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.destination']}" columnId="endAddress"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText value="#{item.stops.get(item.stops.size() - 1).location}" rendered="#{not empty item.stops.get(item.stops.size() - 1).location}" />
+                    </h:link>
+                </h:column>
+
+                <!-- Datum -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.date']}" columnId="startTime" filterType="date"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText value="#{item.stops.get(0).timeStamp}" rendered="#{not empty item.stops.get(0).timeStamp}"/>
+                    </h:link>
+                </h:column>
+
+                <!-- Preis -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.price']}" columnId="pricePerSeat"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText  value="#{item.pricePerSeat}" rendered="#{not empty item.pricePerSeat}" >
+                            <f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" />
+                        </h:outputText>
+                    </h:link>
+                </h:column>
+
+                <!-- Fahrzeug -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.vehicle']}" columnId="transportVehicle" filterType="select"
+                                        filterOptions="#{ridesBean.transportationTypes}"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText value="#{item.transportationType}" rendered="#{not empty item.transportationType}" />
+                    </h:link>
+                </h:column>
+
+                <!-- Plätze -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.seats']}" columnId="maxSeats"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText value="#{item.maxSeats}" rendered="#{not empty item.maxSeats}" />
+                    </h:link>
+                </h:column>
+
+                <!-- Gepäck -->
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{ridesBean}" title="#{msg['ride.col.baggage']}" columnId="maxBaggage"/>
+                    </f:facet>
+                    <h:link outcome="/view/pages/anonymous/ride_details.xhtml" styleClass="text-decoration-none text-dark d-block">
+                        <f:param name="rideId" value="#{item.rideId}" />
+                        <h:outputText value="#{item.maxBaggage}" rendered="#{not empty item.maxBaggage}"  />
+                    </h:link>
+                </h:column>
+
+            </mb:pagedTable>
+
+            <hr />
+
+            <h:link id="l_toCreateRide"
+                    outcome="/view/pages/registered/ride_form.xhtml"
+                    rendered="#{userSessionBean.loggedIn}"
+                    styleClass="btn btn-primary mb-3">
+                #{msg['ride.create.title']}
+            </h:link>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+</html>

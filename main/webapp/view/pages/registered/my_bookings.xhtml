@@ -1,0 +1,103 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mb="http://xmlns.jcp.org/jsf/composite/components"> <body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <div class="my-bookings-container">
+            <h2>Meine Buchungen</h2>
+            <hr />
+
+            <p>
+                Hier sehen Sie alle Fahrten, die Sie als Mitfahrer angefragt
+                oder bereits fest gebucht haben.
+            </p>
+            <br />
+
+            <mb:pagedTable id="pt_myBookings"
+                           bean="#{myBookingsBean}">
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myBookingsBean}"
+                                        columnId="startAddress"
+                                        title="Start" />
+                    </f:facet>
+                    <h:outputText value="#{item.startId}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myBookingsBean}"
+                                        columnId="endAddress"
+                                        title="Ziel" />
+                    </f:facet>
+                    <h:outputText value="#{item.stopId}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myBookingsBean}"
+                                        columnId="time"
+                                        title="Datum" />
+                    </f:facet>
+                    <h:outputText value="#{item.desiredDateTime}">
+                        <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myBookingsBean}"
+                                        columnId="provider"
+                                        title="Anbieter" />
+                    </f:facet>
+                    <h:outputText value="#{item.provider}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myBookingsBean}"
+                                        columnId="status"
+                                        title="Status" />
+                    </f:facet>
+                    <h:outputText value="#{item.status}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Aktionen</f:facet>
+
+                    <h:commandButton id="cb_cancelBooking"
+                                     value="Stornieren"
+                                     action="#{myBookingsBean.cancelBooking(item)}"
+                                     styleClass="button-danger">
+                        <f:ajax render="@form" />
+                    </h:commandButton>
+
+                    <h:link id="l_rateRide"
+                            outcome="/view/facelets/registered/rate_ride.xhtml"
+                            styleClass="button-edit">
+                        Bewerten
+                        <f:param name="rideId" value="#{item.concreteRideId}" />
+                    </h:link>
+                </h:column>
+
+            </mb:pagedTable>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+</body>
+</html>

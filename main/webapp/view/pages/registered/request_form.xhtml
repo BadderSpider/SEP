@@ -1,0 +1,116 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <f:metadata>
+        <f:viewParam id="vp_requestId"
+                     name="reqId"
+                     value="#{requestFormBean.requestDTO.requestId}"
+                     required="false" /> <f:viewAction action="#{requestFormBean.loadRequestForm()}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <div class="request-form-container">
+
+            <h2>
+                <h:outputText value="Gesuch erstellen"
+                              rendered="#{empty requestFormBean.requestDTO.requestId}" />
+                <h:outputText value="Gesuch bearbeiten"
+                              rendered="#{not empty requestFormBean.requestDTO.requestId}" />
+            </h2>
+            <hr />
+
+            <h:form id="requestForm">
+
+                <h:messages globalOnly="true" layout="list" styleClass="error-message" />
+
+                <h:panelGrid columns="3" styleClass="form-grid">
+
+                    <h:outputLabel for="it_startAddress" value="Startort:" />
+                    <h:inputText id="it_startAddress"
+                                 value="#{requestFormBean.requestDTO.start}"
+                                 required="true"
+                                 maxlength="255" />
+                    <h:message for="it_startAddress" styleClass="error-message" />
+
+                    <h:outputLabel for="it_endAddress" value="Zielort:" />
+                    <h:inputText id="it_endAddress"
+                                 value="#{requestFormBean.requestDTO.destination}"
+                                 required="true"
+                                 maxlength="255" />
+                    <h:message for="it_endAddress" styleClass="error-message" />
+
+                    <h:outputLabel for="it_date" value="Gewünschtes Datum:" />
+                    <h:inputText id="it_date"
+                                 value="#{requestFormBean.requestDTO.desiredTime}"
+                                 required="true"
+                                 requiredMessage="Datum ist erforderlich.">
+                        <f:convertDateTime pattern="dd.MM.yyyy" />
+                        <f:validator validatorId="futureDateValidator" />
+                    </h:inputText>
+                    <h:message for="it_date" styleClass="error-message" />
+
+                    <h:outputLabel for="it_time" value="Gewünschte Uhrzeit:" />
+                    <h:inputText id="it_time"
+                                 value="#{requestFormBean.requestDTO.desiredTime}"
+                                 required="true"
+                                 requiredMessage="Uhrzeit ist erforderlich.">
+                        <f:convertDateTime pattern="HH:mm" />
+                    </h:inputText>
+                    <h:message for="it_time" styleClass="error-message" />
+
+                    <h:outputLabel for="it_price" value="Preis (max. €):" />
+                    <h:inputText id="it_price"
+                                 value="#{requestFormBean.requestDTO.price}">
+                        <f:convertNumber type="number" minFractionDigits="0" maxFractionDigits="2" />
+                        <f:validateDoubleRange minimum="0" />
+                    </h:inputText>
+                    <h:message for="it_price" styleClass="error-message" />
+
+                    <h:outputLabel for="it_baggage" value="Gepäckstücke (Anzahl):" />
+                    <h:inputText id="it_baggage"
+                                 value="#{requestFormBean.requestDTO.baggage}">
+                        <f:validateLongRange minimum="0" />
+                    </h:inputText>
+                    <h:message for="it_baggage" styleClass="error-message" />
+
+                </h:panelGrid>
+
+                <div class="action-buttons">
+                    <hr />
+                    <h:commandButton id="cb_saveRequest"
+                                     action="#{requestFormBean.save()}"
+                                     styleClass="button-primary">
+                        <f:attribute name="value"
+                                     value="#{empty requestFormBean.requestDTO.requestId ? 'Gesuch veröffentlichen' : 'Änderungen speichern'}" />
+                    </h:commandButton>
+
+                    <h:commandButton id="cb_deleteRequest"
+                                     value="Gesuch löschen"
+                                     action="#{requestFormBean.deleteRequest()}"
+                                     immediate="true"
+                                     styleClass="button-danger"
+                                     onclick="return confirm('Soll dieses Gesuch wirklich gelöscht werden?');"
+                                     rendered="#{not empty requestFormBean.requestDTO.requestId}" />
+                </div>
+
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+</body>
+</html>

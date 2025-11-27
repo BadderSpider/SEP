@@ -1,0 +1,52 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <f:metadata>
+        <f:viewParam id="vp_token"
+                     name="token"
+                     value="#{verificationBean.verificationTokenDTO.token}"
+                     required="true" />
+
+        <f:viewAction action="#{verificationBean.validateToken()}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <div class="verification-container" style="text-align: center;">
+            <h2>Kontoverifizierung</h2>
+            <hr />
+
+            <p>
+                <h:outputText id="o_verificationMessage"
+                              value="#{verificationBean.verificationMessage}"
+                              styleClass="#{verificationBean.success ? 'message-success' : 'message-error'}" />
+            </p>
+
+            <br />
+
+            <h:link id="l_toLogin"
+                    outcome="/view/facelets/anonymous/login.xhtml"
+                    rendered="#{verificationBean.success}"
+                    styleClass="button-primary">
+                Weiter zur Anmeldung
+            </h:link>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="/view/main_view.xhtml">
+
+    <ui:define name="title">
+        Registrierung (Wireframe)
+    </ui:define>
+
+    <ui:define name="content">
+
+        <div class="container registration-container mt-4" style="max-width: 700px;">
+
+            <h2 class="mb-4">Registrierung</h2>
+            <hr />
+
+            <h:form id="registrationForm">
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <h:outputLabel value="Vorname:" styleClass="form-label fw-bold" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <h:outputLabel value="Nachname:" styleClass="form-label fw-bold" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-12">
+                        <h:outputLabel value="E-Mail:" styleClass="form-label fw-bold" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <h:outputLabel value="Passwort:" styleClass="form-label fw-bold" />
+                        <h:inputSecret styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <h:outputLabel value="Passwort wiederholen:" styleClass="form-label fw-bold" />
+                        <h:inputSecret styleClass="form-control" />
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+                <h4 class="mb-3">Adresse</h4>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-8">
+                        <h:outputLabel value="Straße:" styleClass="form-label" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <h:outputLabel value="Hausnummer:" styleClass="form-label" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <h:outputLabel value="PLZ:" styleClass="form-label" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-8">
+                        <h:outputLabel value="Ort:" styleClass="form-label" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+
+                    <div class="col-12">
+                        <h:outputLabel value="Land:" styleClass="form-label" />
+                        <h:inputText styleClass="form-control" />
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+                <h4 class="mb-3">Optionale Angaben</h4>
+
+                <div class="mb-4">
+                    <h:outputLabel value="Telefon:" styleClass="form-label" />
+                    <h:inputText styleClass="form-control" />
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <h:commandButton value="Registrieren" styleClass="btn btn-primary btn-lg" onclick="return false;" />
+                </div>
+
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

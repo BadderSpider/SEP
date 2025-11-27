@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewParam id="vp_rideId"
+                         name="rideId"
+                         value="#{rideDetailBean.rideDTO.rideId}"
+                         required="true" />
+
+            <f:viewAction action="#{rideDetailBean.loadRide()}" />
+        </f:metadata>
+
+        <div class="ride-details-container">
+            <h2>Fahrtdetails</h2>
+            <hr />
+
+            <h:panelGrid columns="2" styleClass="details-grid" rowClasses="even-row, odd-row">
+                <h:outputText value="Start:" styleClass="label" />
+                <h:outputText id="o_startAddress"
+                              value="#{rideDetailBean.rideDTO.stops.first.location}" />
+
+                <h:outputText value="Ziel:" styleClass="label" />
+                <h:outputText id="o_endAddress"
+                              value="#{rideDetailBean.rideDTO.stops.last.location}" />
+
+                <h:outputText value="Startzeit:" styleClass="label" />
+                <h:outputText id="o_dateTime"
+                              value="#{rideDetailBean.rideDTO.stops.first.timeStamp}">
+                    <f:convertDateTime pattern="dd.MM.yyyy 'um' HH:mm 'Uhr'" />
+                </h:outputText>
+
+                <h:outputText value="Preis pro Sitz:" styleClass="label" />
+                <h:outputText id="o_pricePerSeats"
+                              value="#{rideDetailBean.rideDTO.pricePerSeat}">
+                    <f:convertNumber type="currency" currencySymbol="€" />
+                </h:outputText>
+
+                <h:outputText value="Freie Plätze:" styleClass="label" />
+                <h:outputText id="o_availableSeats"
+                              value="#{rideDetailBean.rideDTO.maxSeats}" />
+
+                <h:outputText value="Fahrzeug:" styleClass="label" />
+                <h:outputText id="o_transportVehicle"
+                              value="#{rideDetailBean.rideDTO.transportationType}" />
+
+                <h:outputText value="Gepäckstücke (max.):" styleClass="label" />
+                <h:outputText id="o_allowedBaggage"
+                              value="#{rideDetailBean.rideDTO.maxBaggage}" />
+            </h:panelGrid>
+
+            <hr />
+
+            <h3>Beschreibung</h3>
+            <div class="description-box">
+                <h:outputText id="o_description"
+                              value="#{rideDetailBean.rideDTO.description}" />
+            </div>
+
+            <h3>Routenverlauf (Zwischenstopps)</h3>
+            <h:dataTable id="dt_stopovers"
+                         value="#{rideDetailBean.rideDTO.stops}"
+                         var="stop"
+                         styleClass="data-table">
+                <h:column>
+                    <f:facet name="header">Ort</f:facet>
+                    <h:outputText id="o_stopLocation" value="#{stop.location}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Ankunftszeit</f:facet>
+                    <h:outputText id="o_stopTime" value="#{stop.timeStamp}">
+                        <f:convertDateTime pattern="dd.MM. HH:mm 'Uhr'" />
+                    </h:outputText>
+                </h:column>
+            </h:dataTable>
+
+            <hr />
+
+            <h:panelGroup id="p_providerInfoWrapper"
+                          rendered="#{userSessionBean.isLoggedIn}">
+                <h3>Informationen zum Anbieter</h3>
+                <h:panelGrid columns="2" styleClass="provider-grid">
+
+                    <h:graphicImage id="gi_providerImage"
+                                    value="#{rideDetailBean.driver.profilePictureUrl}"
+                                    styleClass="profile-picture-small" />
+                    <h:outputText value="" />
+
+                    <h:outputText value="Name:" styleClass="label" />
+                    <h:panelGroup>
+                        <h:outputText id="o_providerName"
+                                      value="#{rideDetailBean.driver.firstName}" />
+                        <h:outputText value=" " />
+                        <h:outputText id="o_providerLastName"
+                                      value="#{rideDetailBean.driver.lastName}" />
+                    </h:panelGroup>
+
+                    <h:outputText value="Bewertung:" styleClass="label" />
+                    <h:outputText id="o_providerRating"
+                                  value="#{rideDetailBean.driver.averageRating}" />
+
+                    <h:outputText value="Telefon:" styleClass="label" />
+                    <h:outputText id="o_providerContactPhone"
+                                  value="#{rideDetailBean.driver.phone}" /> <h:outputText value="E-Mail:" styleClass="label" />
+                    <h:outputText id="o_providerContactEmail"
+                                  value="#{rideDetailBean.driver.email}" /> </h:panelGrid>
+            </h:panelGroup>
+
+            <hr />
+
+            <div class="action-buttons">
+
+                <h:form id="rideDetailForm">
+                    <h:commandButton id="cb_requestBooking"
+                                     value="Jetzt anfragen"
+                                     action="#{rideDetailBean.requestBooking()}"
+                                     rendered="#{userSessionBean.isLoggedIn and not rideDetailBean.isOwnRide()}" />
+
+                    <h:commandButton id="cb_deleteRide"
+                                     value="Fahrt löschen"
+                                     action="#{rideDetailBean.deleteRide()}"
+                                     rendered="#{rideDetailBean.isOwnRide() or userSessionBean.isAdmin}"
+                                     immediate="true"
+                                     styleClass="button-danger"
+                                     onclick="return confirm('Möchten Sie diese Fahrt wirklich löschen?');" />
+                </h:form>
+
+                <h:link id="l_editRide"
+                        outcome="/view/facelets/registered/ride_form.xhtml"
+                        rendered="#{rideDetailBean.isOwnRide() or userSessionBean.isAdmin}"
+                        styleClass="button-edit">
+                    Fahrt bearbeiten
+                    <f:param name="rideId" value="#{rideDetailBean.rideDTO.rideId}" />
+                </h:link>
+
+                <h:link id="l_loginHint"
+                        outcome="/view/facelets/anonymous/login.xhtml"
+                        rendered="#{not userSessionBean.isLoggedIn}">
+                    Zum Anfragen oder Anzeigen von Kontaktdaten bitte anmelden.
+                </h:link>
+
+            </div>
+        </div>
+
+    </ui:define>
+</ui:composition>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:h="http://xmlns.jcp.org/jsf/html"
+              xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+              xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+              xmlns:f="http://xmlns.jcp.org/jsf/core"
+              xmlns:c="jakarta.tags.core"
+              xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+    <cc:interface>
+        <cc:attribute name="bean" type="mitfahrboerse.model.presentation.beans.AbstractPagedTableBean" required="true"/>
+        <cc:attribute name="columnId" type="java.lang.String" required="true"/>
+        <cc:attribute name="title" type="java.lang.String" required="true"/>
+
+        <cc:attribute name="filterType" type="java.lang.String" default="text"/>
+        <cc:attribute name="filterOptions" type="java.util.List" required="false"/>
+    </cc:interface>
+
+    <cc:implementation>
+
+
+        <h:panelGroup id="p_column" layout="block">
+
+            <h:outputText id="o_title" value="#{cc.attrs.title}" styleClass="fw-bold"/>
+
+            <br />
+
+            <h:panelGroup id="p_sortControls" styleClass="d-inline-block my-1">
+                <h:commandLink id="cl_sortAsc"
+                               action="#{item.sort(cc.attrs.columnId, item.sortDirAsc)}"
+                               value=" &#9650;"
+                               title="Aufsteigend sortieren"
+                               styleClass="text-decoration-none text-secondary me-2">
+                    <f:ajax execute="@form" render="@form"/>
+                </h:commandLink>
+
+                <h:commandLink id="cl_sortDesc"
+                               action="#{item.sort(cc.attrs.columnId, item.sortDirDesc)}"
+                               value=" &#9660;"
+                               title="Absteigend sortieren"
+                               styleClass="text-decoration-none text-secondary">
+                    <f:ajax execute="@form" render="@form"/>
+                </h:commandLink>
+            </h:panelGroup>
+
+            <br />
+
+            <c:choose>
+
+                <c:when test="#{cc.attrs.filterType eq 'select'}">
+                    <h:selectOneMenu id="som_filter"
+                                     value="#{item.searchCriteriaDto.filters[cc.attrs.columnId]}"
+                                     styleClass="form-select form-select-sm">
+                        <f:selectItem  itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{cc.attrs.filterOptions}" />
+                    </h:selectOneMenu>
+                </c:when>
+
+                <c:when test="#{cc.attrs.filterType eq 'date'}">
+                    <h:inputText id="it_filter_date"
+                                 value="#{item.searchCriteriaDto.filters[cc.attrs.columnId]}"
+                                 styleClass="form-control form-control-sm"
+                                 p:type="datetime-local"
+                                  />
+                </c:when>
+
+                <c:otherwise>
+                    <h:inputText id="it_filter"
+                                 value="#{item.searchCriteriaDto.filters[cc.attrs.columnId]}"
+                                 placeholder="#{cc.attrs.title}"
+                                 styleClass="form-control form-control-sm"/>
+                </c:otherwise>
+            </c:choose>
+
+        </h:panelGroup>
+    </cc:implementation>
+</ui:component>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="6.0"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <display-name>SEP Mitfahrbörse</display-name>
+
+    <listener>
+        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
+
+    <!-- FacesServlet -->
+    <servlet>
+        <servlet-name>facesServlet</servlet-name>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- JSF mapping -->
+    <servlet-mapping>
+        <servlet-name>facesServlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome-Page -->
+    <welcome-file-list>
+        <welcome-file>faces/view/pages/anonymous/rides.xhtml</welcome-file>
+    </welcome-file-list>
+
+    <!-- CDI BeanManager -->
+    <resource-env-ref>
+        <description>Object factory for the CDI Bean Manager.</description>
+        <resource-env-ref-name>BeanManager</resource-env-ref-name>
+        <resource-env-ref-type>
+            jakarta.enterprise.inject.spi.BeanManager
+        </resource-env-ref-type>
+    </resource-env-ref>
+    
+    <!-- Security -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>downloadProtectedArea</web-resource-name>
+            <url-pattern>/view/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint/>
+    </security-constraint>
+
+</web-app>

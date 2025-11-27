@@ -1,0 +1,30 @@
+
+.container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+}
+
+/* Optional: Login-Formular wieder schmaler machen, sonst sieht es komisch aus */
+.login-container, .register-container, .narrow-content {
+    max-width: 600px !important;
+    margin: 0 auto !important;
+}
+
+/* Layout Anpassungen */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#layout-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+#template-content {
+    overflow-y: auto;
+    padding: 1.5rem !important;
+}

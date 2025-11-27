@@ -1,0 +1,88 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mb="http://xmlns.jcp.org/jsf/composite/components"> <body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <div class="user-management-container">
+            <h2>Nutzerverwaltung</h2>
+            <hr />
+
+            <h:link id="l_toCreateUser"
+                    outcome="/view/facelets/anonymous/register.xhtml"
+                    styleClass="button-primary">
+                Neuen Nutzer anlegen
+            </h:link>
+
+            <br /><br />
+
+            <mb:pagedTable id="pt_userTable"
+                           bean="#{userManagementBean}">
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{userManagementBean}"
+                                        columnId="lastName"
+                                        title="Name" />
+                    </f:facet>
+                    <h:link outcome="/view/facelets/registered/profile.xhtml">
+                        <f:param name="userId" value="#{item.userId}" />
+                        <h:outputText value="#{item.lastName}" />
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{userManagementBean}"
+                                        columnId="firstName"
+                                        title="Vorname" />
+                    </f:facet>
+                    <h:link outcome="/view/facelets/registered/profile.xhtml">
+                        <f:param name="userId" value="#{item.userId}" />
+                        <h:outputText value="#{item.firstName}" />
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{userManagementBean}"
+                                        columnId="email"
+                                        title="E-Mail" />
+                    </f:facet>
+                    <h:link outcome="/view/facelets/registered/profile.xhtml">
+                        <f:param name="userId" value="#{item.userId}" />
+                        <h:outputText value="#{item.email}" />
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{userManagementBean}"
+                                        columnId="role"
+                                        title="Rolle" />
+                    </f:facet>
+                    <h:link outcome="/view/facelets/registered/profile.xhtml">
+                        <f:param name="userId" value="#{item.userId}" />
+                        <h:outputText value="#{item.userRole}" />
+                    </h:link>
+                </h:column>
+
+            </mb:pagedTable>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+</body>
+</html>

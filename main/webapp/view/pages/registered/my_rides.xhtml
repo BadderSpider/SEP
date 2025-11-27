@@ -1,0 +1,180 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mb="http://xmlns.jcp.org/jsf/composite/components"> <body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <div class="my-rides-container">
+
+            <h2>
+                <h:outputText value="Fahrtenverwaltung"
+                              rendered="#{userSessionBean.isAdmin}" />
+                <h:outputText value="Meine angebotenen Fahrten"
+                              rendered="#{not userSessionBean.isAdmin}" />
+            </h2>
+            <hr />
+
+            <h:link id="l_toCreateRide"
+                    outcome="/view/facelets/registered/ride_form.xhtml"
+                    styleClass="button-primary">
+                Neue Fahrt anbieten
+            </h:link>
+
+            <br /><br />
+
+            <mb:pagedTable id="pt_myRides"
+                           bean="#{myRidesBean}">
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRidesBean}"
+                                        columnId="startAddress"
+                                        title="Start" />
+                    </f:facet>
+                    <h:outputText value="#{item.stops.first.location}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRidesBean}"
+                                        columnId="destination"
+                                        title="Ziel" />
+                    </f:facet>
+                    <h:outputText value="#{item.stops.last.location}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRidesBean}"
+                                        columnId="departureTime"
+                                        title="Datum" />
+                    </f:facet>
+                    <h:outputText value="#{item.stops.first.timeStamp}">
+                        <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column rendered="#{userSessionBean.isAdmin}">
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{myRidesBean}"
+                                        columnId="provider"
+                                        title="Anbieter"
+                                        rendered="#{userSessionBean.isAdmin}" />
+                    </f:facet>
+                    <h:outputText value="#{item.driver.firstName} #{item.driver.lastName}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Aktionen</f:facet>
+
+                    <h:link id="l_editRide"
+                            outcome="/view/facelets/registered/ride_form.xhtml"
+                            styleClass="button-edit">
+                        Bearbeiten
+                        <f:param name="rideId" value="#{item.rideId}" />
+                    </h:link>
+
+                    <h:commandButton id="cb_showBookings"
+                                     value="Anfragen verwalten"
+                                     action="#{myRidesBean.showBookingRequests(item)}">
+                        <f:ajax render=":bookingDialog" />
+                    </h:commandButton>
+
+                    <h:commandButton id="cb_deleteRide"
+                                     value="Löschen"
+                                     action="#{myRidesBean.deleteRide(item.rideId)}"
+                                     styleClass="button-danger"
+                                     onclick="return confirm('Soll diese Fahrt wirklich gelöscht werden?');">
+                        <f:ajax render="@form" />
+                    </h:commandButton>
+                </h:column>
+
+            </mb:pagedTable>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+<h:panelGroup id="bookingDialog"
+              layout="block"
+              styleClass="modal-dialog-wrapper"
+              rendered="#{myRidesBean.currentBookings != null}">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-content">
+        <h3>Buchungsanfragen verwalten</h3>
+        <hr />
+
+        <h:form id="bookingDialogForm">
+
+            <h:dataTable id="dt_bookings"
+                         value="#{myRidesBean.currentBookings}"
+                         var="booking"
+                         styleClass="data-table">
+
+                <h:column>
+                    <f:facet name="header">Passagier</f:facet>
+                    <h:outputText id="o_booking_user"
+                                  value="#{booking.passengerId}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    <h:outputText id="o_booking_status" value="#{booking.status}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Aktion</f:facet>
+
+                    <h:commandButton id="cb_acceptBooking"
+                                     value="Annehmen"
+                                     action="#{myRidesBean.acceptBooking(booking)}"
+                                     rendered="#{booking.status == 'REQUESTED'}"
+                                     styleClass="button-success">
+                        <f:ajax render=":bookingDialogForm" />
+                    </h:commandButton>
+
+                    <h:commandButton id="cb_rejectBooking"
+                                     value="Ablehnen"
+                                     action="#{myRidesBean.rejectBooking(booking)}"
+                                     rendered="#{booking.status == 'REQUESTED'}"
+                                     styleClass="button-danger">
+                        <f:ajax render=":bookingDialogForm" />
+                    </h:commandButton>
+
+                    <h:commandButton id="cb_removePassenger"
+                                     value="Entfernen"
+                                     action="#{myRidesBean.removePassenger(booking)}"
+                                     rendered="#{booking.status == 'ACCEPTED'}"
+                                     styleClass="button-danger">
+                        <f:ajax render=":bookingDialogForm" />
+                    </h:commandButton>
+                </h:column>
+
+            </h:dataTable>
+
+            <hr />
+            <h:commandButton value="Schließen"
+                             action="#{myRidesBean.closeBookingDialog()}"
+                             immediate="true">
+                <f:ajax render=":bookingDialog" />
+            </h:commandButton>
+
+        </h:form>
+    </div>
+</h:panelGroup>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <footer class="footer mt-auto py-3 bg-light border-top">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+
+                <div class="col-6">
+                    <nav id="footer-navigation">
+                        <ul class="nav justify-content-start">
+                            <li class="nav-item">
+                                <h:link id="l_toImprint"
+                                        outcome="/view/pages/anonymous/imprint.xhtml"
+                                        styleClass="nav-link px-2 text-muted">
+                                    #{msg['footer.imprint']}
+                                </h:link>
+                            </li>
+                            <li class="nav-item">
+                                <h:link id="l_toPrivacy"
+                                        outcome="/view/pages/anonymous/privacy_policy.xhtml"
+                                        styleClass="nav-link px-2 text-muted">
+                                    #{msg['footer.privacy']}
+                                </h:link>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="col-6 text-end">
+                    <span class="text-muted">©#{ msg['title']}</span>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+</ui:composition>

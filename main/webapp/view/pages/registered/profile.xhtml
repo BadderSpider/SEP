@@ -1,0 +1,185 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <f:metadata>
+        <f:viewParam id="vp_userId"
+                     name="userId"
+                     value="#{profileBean.userId}" />
+
+        <f:viewAction action="#{profileBean.loadUser()}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <div class="profile-container">
+            <h2>Profil bearbeiten</h2>
+            <hr />
+
+            <h:form id="profileForm" enctype="multipart/form-data">
+
+                <h:messages globalOnly="true" layout="list" styleClass="error-message" />
+
+                <h3>Profilbild</h3>
+                <h:panelGroup layout="block" styleClass="profile-picture-section">
+                    <h:graphicImage id="gi_profilePicture"
+                                    value="#{profileBean.UserDTO.profilePictureURL}"
+                                    styleClass="profile-image-large" />
+                    <br />
+                    <h:outputLabel for="if_uploadPicture" value="Neues Bild hochladen:" />
+                    <h:inputFile id="if_uploadPicture"
+                                 value="#{profileBean.uploadedImage}" />
+                    <h:message for="if_uploadPicture" styleClass="error-message" />
+                </h:panelGroup>
+
+                <h:panelGrid columns="3" styleClass="form-grid">
+
+                    <h:panelGroup colspan="3" layout="block" styleClass="form-section-header">
+                        <hr /><h4>Persönliche Daten</h4>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="it_firstName" value="Vorname:" />
+                    <h:inputText id="it_firstName" value="#{profileBean.UserDTO.firstName}"
+                                 required="true" maxlength="100" />
+                    <h:message for="it_firstName" styleClass="error-message" />
+
+                    <h:outputLabel for="it_lastName" value="Nachname:" />
+                    <h:inputText id="it_lastName" value="#{profileBean.UserDTO.lastName}"
+                                 required="true" maxlength="100" />
+                    <h:message for="it_lastName" styleClass="error-message" />
+
+                    <h:outputLabel for="it_phone" value="Telefon (optional):" />
+                    <h:inputText id="it_phone" value="#{profileBean.UserDTO.phone}"
+                                 maxlength="20" />
+                    <h:message for="it_phone" styleClass="error-message" />
+
+                    <h:panelGroup colspan="3" layout="block" styleClass="form-section-header">
+                        <hr /><h4>Adresse</h4>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="it_street" value="Straße:" />
+                    <h:inputText id="it_street" value="#{profileBean.UserDTO.address.Street}"
+                                 required="true" maxlength="255" />
+                    <h:message for="it_street" styleClass="error-message" />
+
+                    <h:outputLabel for="it_houseNumber" value="Hausnr.:" />
+                    <h:inputText id="it_houseNumber" value="#{profileBean.UserDTO.address.Streetnumber}"
+                                 required="true" maxlength="10" />
+                    <h:message for="it_houseNumber" styleClass="error-message" />
+
+                    <h:outputLabel for="it_zipCode" value="PLZ:" />
+                    <h:inputText id="it_zipCode" value="#{profileBean.UserDTO.address.PLZ}"
+                                 required="true" maxlength="10" />
+                    <h:message for="it_zipCode" styleClass="error-message" />
+
+                    <h:outputLabel for="it_city" value="Ort:" />
+                    <h:inputText id="it_city" value="#{profileBean.UserDTO.address.town}"
+                                 required="true" maxlength="100" />
+                    <h:message for="it_city" styleClass="error-message" />
+
+                    <h:outputLabel for="it_country" value="Land:" />
+                    <h:inputText id="it_country" value="#{profileBean.UserDTO.address.country}"
+                                 required="true" maxlength="100" />
+                    <h:message for="it_country" styleClass="error-message" />
+
+                    <h:panelGroup colspan="3" layout="block" styleClass="form-section-header">
+                        <hr /><h4>Daten &amp; Sicherheit</h4>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="it_email" value="E-Mail:" />
+                    <h:inputText id="it_email" value="#{profileBean.UserDTO.email}"
+                                 required="true" maxlength="255">
+                        <f:validator validatorId="emailValidator" />
+                    </h:inputText>
+                    <h:message for="it_email" styleClass="error-message" />
+
+                    <h:outputLabel value="Passwort:" />
+                    <h:panelGroup>
+                        <h:commandLink id="cl_reqPassChange"
+                                       value="Passwort ändern..."
+                                       action="#{profileBean.requestPasswordChange()}"
+                                       rendered="#{not userSessionBean.isAdmin}"
+                                       immediate="true" />
+                        <h:inputSecret id="is_adminNewPass"
+                                       value="#{profileBean.isAdminNewPassword}"
+                                       rendered="#{userSessionBean.isAdmin}" />
+                    </h:panelGroup>
+                    <h:message for="is_adminNewPass" styleClass="error-message" />
+
+                    <h:outputLabel for="sbc_notifications" value="E-Mail Benachrichtigungen:" />
+                    <h:selectBooleanCheckbox id="sbc_notifications"
+                                             value="#{profileBean.userDTO.notifications}" />
+                    <h:message for="sbc_notifications" styleClass="error-message" />
+
+                </h:panelGrid>
+
+                <h:panelGroup id="adminSection"
+                              layout="block"
+                              rendered="#{userSessionBean.isAdmin}"
+                              styleClass="admin-section">
+
+                    <h:panelGroup colspan="3" layout="block" styleClass="form-section-header">
+                        <hr /><h4>Administrative Einstellungen</h4>
+                    </h:panelGroup>
+
+                    <h:panelGrid columns="3" styleClass="form-grid">
+                        <h:outputLabel for="sbc_setAdmin" value="Administrator-Rolle:" />
+                        <h:selectBooleanCheckbox id="sbc_setAdmin"
+                                                 value="#{profileBean.isAdminRole}" />
+                        <h:message for="sbc_setAdmin" styleClass="error-message" />
+
+                        <h:outputLabel for="sbc_setVerified" value="Konto verifiziert:" />
+                        <h:selectBooleanCheckbox id="sbc_setVerified"
+                                                 value="#{profileBean.UserDTO.mailVerified}" />
+                        <h:message for="sbc_setVerified" styleClass="error-message" />
+
+                        <h:outputLabel for="it_avgRating" value="Ø Bewertung:" />
+                        <h:inputText id="it_avgRating"
+                                     value="#{profileBean.UserDTO.averageRating}">
+                            <f:validateDoubleRange minimum="0.0" maximum="5.0" />
+                        </h:inputText>
+                        <h:message for="it_avgRating" styleClass="error-message" />
+
+                        <h:outputLabel for="it_ratingCount" value="Anzahl Bewertungen:" />
+                        <h:inputText id="it_ratingCount"
+                                     value="#{profileBean.UserDTO.ratingCount}">
+                            <f:validateLongRange minimum="0" />
+                        </h:inputText>
+                        <h:message for="it_ratingCount" styleClass="error-message" />
+
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <div class="action-buttons">
+                    <hr />
+                    <h:commandButton id="cb_saveProfile"
+                                     value="Profil speichern"
+                                     action="#{profileBean.save()}"
+                                     styleClass="button-primary" />
+
+                    <h:commandButton id="cb_deleteAccount"
+                                     value="Konto löschen"
+                                     action="#{profileBean.deleteAccount()}"
+                                     immediate="true"
+                                     styleClass="button-danger"
+                                     onclick="return confirm('Möchten Sie dieses Konto wirklich unwiderruflich löschen?');" />
+                </div>
+
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>
+
+</body>
+</html>

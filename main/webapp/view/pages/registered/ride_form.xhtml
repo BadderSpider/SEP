@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/view/main_view.xhtml">
+
+    <ui:define name="title">
+        Fahrt anbieten (Wireframe)
+    </ui:define>
+
+    <ui:define name="content">
+
+        <div class="container ride-form-container">
+
+            <h2 class="mb-3">Fahrt anbieten</h2>
+
+            <hr />
+
+            <h:form id="rideForm">
+
+                <div class="row g-3 mb-4">
+                    <!-- Startadresse -->
+                    <div class="col-md-6">
+                        <h:outputLabel for="it_startAddress" value="Startadresse:" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_startAddress" styleClass="form-control" /> <!-- Keine Value-Bindung -->
+                    </div>
+
+                    <!-- Zieladresse -->
+                    <div class="col-md-6">
+                        <h:outputLabel for="it_endAddress" value="Zieladresse:" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_endAddress" styleClass="form-control" />
+                    </div>
+
+                    <!-- Startdatum -->
+                    <div class="col-md-3">
+                        <h:outputLabel for="it_startDate" value="Startdatum:" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_startDate" styleClass="form-control" /> <!-- Kein Converter/Validator -->
+                        <small class="text-muted">Format: TT.MM.JJJJ</small>
+                    </div>
+
+                    <!-- Startzeit -->
+                    <div class="col-md-3">
+                        <h:outputLabel for="it_startTime" value="Startzeit:" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_startTime" styleClass="form-control" />
+                        <small class="text-muted">Format: HH:mm</small>
+                    </div>
+
+                    <!-- Preis -->
+                    <div class="col-md-3">
+                        <h:outputLabel for="it_price" value="Preis pro Sitz (€):" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_price" styleClass="form-control" />
+                    </div>
+
+                    <!-- Plätze -->
+                    <div class="col-md-3">
+                        <h:outputLabel for="it_seats" value="Verfügbare Plätze:" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_seats" styleClass="form-control" />
+                    </div>
+
+                    <!-- Gepäck -->
+                    <div class="col-md-6">
+                        <h:outputLabel for="it_baggage" value="Gepäckstücke (max.):" styleClass="form-label fw-bold" />
+                        <h:inputText id="it_baggage" styleClass="form-control" />
+                    </div>
+
+                    <!-- Transportmittel -->
+                    <div class="col-md-6">
+                        <h:outputLabel for="som_transportType" value="Transportmittel:" styleClass="form-label fw-bold" />
+                        <h:selectOneMenu id="som_transportType" styleClass="form-select">
+                            <!-- Statische Dummy-Items statt f:selectItems -->
+                            <f:selectItem itemLabel="Auto" itemValue="CAR" />
+                            <f:selectItem itemLabel="Bus" itemValue="BUS" />
+                            <f:selectItem itemLabel="Zug" itemValue="TRAIN" />
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+
+                <hr />
+                <h4 class="mb-3">Zwischenstopps verwalten</h4>
+
+                <!-- Panel für neuen Stopp -->
+                <div class="mb-4 p-3 bg-light border rounded">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-5">
+                            <h:outputLabel value="Stopp-Adresse:" styleClass="form-label" />
+                            <h:inputText styleClass="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <h:outputLabel value="Stopp-Zeit:" styleClass="form-label" />
+                            <h:inputText styleClass="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <!-- Button ohne Action -->
+                            <h:commandButton value="Stopp hinzufügen" styleClass="btn btn-outline-primary w-100" onclick="return false;" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statische Tabelle als visuelles Mockup (da h:dataTable leer wäre ohne Daten) -->
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Adresse</th>
+                        <th>Zeit</th>
+                        <th>Aktion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>München Hauptbahnhof (Beispiel)</td>
+                        <td>15.05.2025 14:30</td>
+                        <td><button class="btn btn-sm btn-danger" onclick="return false;">Löschen</button></td>
+                    </tr>
+                    <tr>
+                        <td>Nürnberg ZOB (Beispiel)</td>
+                        <td>15.05.2025 16:00</td>
+                        <td><button class="btn btn-sm btn-danger" onclick="return false;">Löschen</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <hr />
+                <h4 class="mb-3">Beschreibung der Fahrt</h4>
+                <div class="mb-4">
+                    <h:inputTextarea id="ita_description" rows="5" styleClass="form-control" />
+                </div>
+
+                <hr />
+                <h4 class="mb-3">Wiederkehrende Fahrt</h4>
+                <div class="form-check mb-3">
+                    <h:selectBooleanCheckbox id="sbc_isRecurring" styleClass="form-check-input" />
+                    <h:outputLabel for="sbc_isRecurring" value=" Diese Fahrt wiederholt sich" styleClass="form-check-label" />
+                </div>
+
+                <!-- Statischer Block für Wiederholung (ohne rendered Logik, einfach sichtbar gemacht für Wireframe) -->
+                <div class="p-3 border rounded mb-4 bg-light">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <h:outputLabel value="Wiederholung:" styleClass="form-label fw-bold" />
+                            <h:selectOneMenu styleClass="form-select">
+                                <f:selectItem itemLabel="Täglich" itemValue="DAILY" />
+                                <f:selectItem itemLabel="Wöchentlich" itemValue="WEEKLY" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel value="Enddatum (optional):" styleClass="form-label fw-bold" />
+                            <h:inputText styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3">Ausnahmetage (Fahrt fällt aus)</h5>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <h:inputText styleClass="form-control" />
+                            <h:commandButton value="Hinzufügen" styleClass="btn btn-secondary" onclick="return false;" />
+                        </div>
+                    </div>
+
+                    <!-- Dummy Tabelle für Ausnahmen -->
+                    <table class="table table-sm table-bordered">
+                        <thead><tr><th>Ausnahmedatum</th><th>Aktion</th></tr></thead>
+                        <tbody>
+                        <tr>
+                            <td>24.12.2025</td>
+                            <td><button class="btn btn-sm btn-danger" onclick="return false;">Löschen</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <h:commandButton value="Fahrt veröffentlichen" styleClass="btn btn-primary btn-lg" onclick="return false;" />
+
+                    <!-- Löschen Button (normalerweise nur beim Bearbeiten sichtbar) -->
+                    <h:commandButton value="Fahrt löschen" styleClass="btn btn-danger" onclick="return false;" />
+                </div>
+
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,98 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:mb="http://xmlns.jcp.org/jsf/composite/components"> <body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <div class="requests-overview-container">
+            <h2>Verfügbare Mitfahrgesuche</h2>
+            <hr />
+
+            <h:link id="l_toCreateRequest"
+                    outcome="/view/facelets/registered/request_form.xhtml"
+                    rendered="#{userSessionBean.isLoggedIn}"
+                    styleClass="button-primary">
+                Gesuch erstellen
+            </h:link>
+
+            <br /><br />
+
+            <mb:pagedTable id="pt_requestsTable"
+                           bean="#{requestsBean}">
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{requestsBean}"
+                                        columnId="startAddress"
+                                        title="Start" />
+                    </f:facet>
+                    <h:outputText value="#{item.start}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{requestsBean}"
+                                        columnId="endAddress"
+                                        title="Ziel" />
+                    </f:facet>
+                    <h:outputText value="#{item.destination}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{requestsBean}"
+                                        columnId="desiredDateTime"
+                                        title="Datum" />
+                    </f:facet>
+                    <h:outputText value="#{item.desiredTime}">
+                        <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{requestsBean}"
+                                        columnId="user"
+                                        title="Nutzer" />
+                    </f:facet>
+                    <h:outputText value="#{item.userDTO.firstName}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{requestsBean}"
+                                        columnId="price"
+                                        title="Preis" />
+                    </f:facet>
+                    <h:outputText value="#{item.price}">
+                        <f:convertNumber type="currency" currencySymbol="€" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <mb:tableColumn bean="#{requestsBean}"
+                                        columnId="baggage"
+                                        title="Gepäck" /> </f:facet>
+                    <h:outputText value="#{item.baggage}" />
+                </h:column>
+
+            </mb:pagedTable>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+</body>
+</html>

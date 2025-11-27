@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <div class="system-settings-container">
+            <h2>Systemeinstellungen</h2>
+            <hr />
+
+            <h:form id="systemSettingsForm" enctype="multipart/form-data">
+
+                <h:messages globalOnly="true" layout="list" infoClass="message-success" />
+
+                <h:panelGrid columns="3" styleClass="form-grid">
+
+                    <h:outputLabel for="it_platformName" value="Name der Plattform:" />
+                    <h:inputText id="it_platformName"
+                                 value="#{systemSettingsBean.SystemSettingsDTO.enterpriseName}"
+                                 required="true"
+                                 maxlength="20" />
+                    <h:message for="it_platformName" styleClass="error-message" />
+
+                    <h:outputLabel for="if_logoUpload" value="Logo hochladen:" />
+                    <h:inputFile id="if_logoUpload"
+                                 value="#{systemSettingsBean.uploadedLogoFile}" />
+                    <h:message for="if_logoUpload" styleClass="error-message" />
+
+                    <h:outputLabel for="it_primaryColor" value="Pfad zur CSS (Farbschema):" />
+                    <h:inputText id="it_primaryColor"
+                                 value="#{systemSettingsBean.SystemSettingsDTO.pathToCss}"
+                                 required="true"
+                                 maxlength="50" />
+                    <h:message for="it_primaryColor" styleClass="error-message" />
+
+                    <h:outputLabel for="it_canelDeadlineHours" value="Stornierungsfrist (Stunden):" />
+                    <h:inputText id="it_canelDeadlineHours"
+                                 value="#{systemSettingsBean.SystemSettingsDTO.cancelDeadlineHours}"
+                                 required="true">
+                        <f:validateLongRange minimum="1" />
+                    </h:inputText>
+                    <h:message for="it_canelDeadlineHours" styleClass="error-message" />
+
+                    <h:outputLabel for="it_rideCleanupDays" value="Aufräumfrist (Tage):" />
+                    <h:inputText id="it_rideCleanupDays"
+                                 value="#{systemSettingsBean.SystemSettingsDTO.rideCleanupDays}"
+                                 required="true">
+                        <f:validateLongRange minimum="1" />
+                    </h:inputText>
+                    <h:message for="it_rideCleanupDays" styleClass="error-message" />
+
+                </h:panelGrid>
+
+                <hr />
+
+                <div class="textarea-section">
+                    <h:outputLabel for="ita_imprint" value="Impressum-Text:" />
+                    <h:inputTextarea id="ita_imprint"
+                                     value="#{systemSettingsBean.SystemSettingsDTO.imprint}"
+                                     required="true"
+                                     rows="10" cols="70">
+                        <f:validateLength maximum="5000" />
+                    </h:inputTextarea>
+                    <h:message for="ita_imprint" styleClass="error-message" />
+                </div>
+
+                <div class="textarea-section">
+                    <h:outputLabel for="ita_privacy" value="Datenschutz-Text:" />
+                    <h:inputTextarea id="ita_privacy"
+                                     value="#{systemSettingsBean.SystemSettingsDTO.privacyPolicy}"
+                                     required="true"
+                                     rows="15" cols="70">
+                        <f:validateLength maximum="10000" />
+                    </h:inputTextarea>
+                    <h:message for="ita_privacy" styleClass="error-message" />
+                </div>
+
+                <div class="action-buttons">
+                    <hr />
+                    <h:commandButton id="cb_saveSettings"
+                                     value="Einstellungen speichern"
+                                     action="#{systemSettingsBean.save()}"
+                                     styleClass="button-primary" />
+                </div>
+
+            </h:form>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
+</body>
+</html>

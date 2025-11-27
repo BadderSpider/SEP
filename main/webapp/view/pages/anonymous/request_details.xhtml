@@ -1,0 +1,133 @@
+<!-- author Matthias Schmitt -->
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+
+<ui:composition template="/view/facelets/templates/main_view.xhtml">
+
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewParam id="vp_requestId"
+                         name="reqId"
+                         value="#{requestDetailBean.requestDTO.requestId}"
+                         required="true" />
+
+            <f:viewAction action="#{requestDetailBean.loadRequest()}" />
+        </f:metadata>
+
+        <div class="request-details-container">
+            <h2>Details zum Mitfahrgesuch</h2>
+            <hr />
+
+            <h:panelGrid columns="2" styleClass="details-grid">
+                <h:outputText value="Gewünschter Start:" styleClass="label" />
+                <h:outputText id="o_startAddress"
+                              value="#{requestDetailBean.requestDTO.start}" />
+
+                <h:outputText value="Gewünschtes Ziel:" styleClass="label" />
+                <h:outputText id="o_destination"
+                              value="#{requestDetailBean.requestDTO.destination}" />
+
+                <h:outputText value="Gewünschte Zeit:" styleClass="label" />
+                <h:outputText id="o_desiredTime"
+                              value="#{requestDetailBean.requestDTO.desiredTime}">
+                    <f:convertDateTime pattern="dd.MM.yyyy 'um' HH:mm 'Uhr'" />
+                </h:outputText>
+            </h:panelGrid>
+
+            <hr />
+
+            <h3>Beschreibung</h3>
+            <div class="description-box">
+                <h:outputText id="o_description"
+                              value="#{requestDetailBean.requestDTO.description}" />
+            </div>
+            <hr />
+
+            <h:panelGroup id="p_requesterInfoWrapper"
+                          rendered="#{userSessionBean.isLoggedIn}">
+
+                <h3>Informationen zum Suchenden</h3>
+                <h:panelGrid columns="2" styleClass="provider-grid">
+
+                    <h:graphicImage id="gi_requesterImage"
+                                    value="#{requestDetailBean.requestDTO.userDTO.profilePictureURL}"
+                                    styleClass="profile-picture-small" />
+                    <h:outputText value="" /> <h:outputText value="Name:" styleClass="label" />
+                    <h:panelGroup>
+                        <h:outputText id="o_requesterName"
+                                      value="#{requestDetailBean.requestDTO.userDTO.firstName}" />
+                        <h:outputText value=" " />
+                        <h:outputText id="o_requesterLastName" value="#{requestDetailBean.requestDTO.userDTO.lastName}" />
+                    </h:panelGroup>
+
+                    <h:outputText value="Bewertung:" styleClass="label" />
+                    <h:outputText id="o_requesterRating"
+                                  value="#{requestDetailBean.requestDTO.userDTO.averageRating}" />
+
+                    <h:outputText value="Telefon:" styleClass="label" />
+                    <h:outputText id="o_requesterContact"
+                                  value="#{requestDetailBean.requestDTO.userDTO.phone}" />
+
+                </h:panelGrid>
+            </h:panelGroup>
+
+            <hr />
+
+            <div class="action-buttons">
+
+                <h:form id="requestDetailForm">
+
+                    <h:panelGroup id="p_offerRide"
+                                  rendered="#{userSessionBean.isLoggedIn and not requestDetailBean.isOwnRequest()}">
+
+                        <h:selectOneMenu id="som_offerRide"
+                                         value="#{requestDetailBean.selectedRideId}">
+                            <f:selectItems value="#{requestDetailBean.availableRides}" />
+                        </h:selectOneMenu>
+
+                        <h:commandButton id="cb_offerRide"
+                                         value="Fahrt anbieten"
+                                         action="#{requestDetailBean.offerRide()}" />
+                    </h:panelGroup>
+
+                    <h:commandButton id="cb_deleteRequest"
+                                     value="Gesuch löschen"
+                                     action="#{requestDetailBean.deleteRequest()}"
+                                     rendered="#{requestDetailBean.isOwnRequest() or userSessionBean.isAdmin}"
+                                     immediate="true"
+                                     styleClass="button-danger"
+                                     onclick="return confirm('Möchten Sie dieses Gesuch wirklich löschen?');" />
+
+                </h:form>
+
+                <h:link id="l_editRequest"
+                        outcome="/view/facelets/registered/request_form.xhtml"
+                        rendered="#{requestDetailBean.isOwnRequest() or userSessionBean.isAdmin}"
+                        styleClass="button-edit">
+                    Gesuch bearbeiten
+                    <f:param name="reqId" value="#{requestDetailBean.requestDTO.requestId}" />
+                </h:link>
+
+                <h:link id="l_loginHint"
+                        outcome="/view/facelets/anonymous/login.xhtml"
+                        rendered="#{userSessionBean.isAnonymous}">
+                    Bitte anmelden, um Kontaktdaten zu sehen oder eine Fahrt anzubieten.
+                </h:link>
+
+            </div>
+        </div>
+
+    </ui:define>
+</ui:composition>
+
+</body>
+</html>

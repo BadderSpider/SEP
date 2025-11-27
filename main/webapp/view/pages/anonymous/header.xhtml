@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="headerForm">
+
+        <nav class="navbar navbar-expand navbar-light bg-light border-bottom shadow-sm">
+            <div class="container-fluid">
+
+                <h:link outcome="/view/pages/anonymous/rides.xhtml" styleClass="navbar-brand">
+                    <h:graphicImage id="g_logo"
+                                    value="#{headerBean.imageURL}"
+                                    style="height: 50px;" />
+                </h:link>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <h:link id="l_toRides"
+                                    outcome="/view/pages/anonymous/rides.xhtml"
+                                    styleClass="nav-link">
+                                #{msg['header.rides']}
+                            </h:link>
+                        </li>
+                        <li class="nav-item">
+                            <h:link id="l_toRequests"
+                                    outcome="/view/pages/anonymous/requests.xhtml"
+                                    styleClass="nav-link">
+                                #{msg['header.requests']}
+                            </h:link>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto">
+
+                        <ui:fragment rendered="#{userSessionBean.anonymous}">
+                            <li class="nav-item">
+                                <h:link id="l_toLogin"
+                                        outcome="/view/pages/anonymous/login.xhtml"
+                                        styleClass="btn btn-outline-primary ">
+                                    #{msg['header.login']}
+                                </h:link>
+                            </li>
+                            <li class="nav-item">
+                                <h:link id="l_toRegister"
+                                        outcome="/view/pages/anonymous/register.xhtml"
+                                        styleClass="btn btn-outline-primary ms-2">
+                                    #{msg['header.register']}
+                                </h:link>
+                            </li>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="#{userSessionBean.loggedIn}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle " id="navbarDropdownAccount" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    #{msg['header.account']}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAccount">
+                                    <li>
+                                        <h:link id="l_toProfile" outcome="/view/pages/registered/profile.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.profile']}
+                                        </h:link>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <h:link id="l_toMyRides" outcome="/view/pages/registered/my_rides.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.my_rides']}
+                                        </h:link>
+                                    </li>
+                                    <li>
+                                        <h:link id="l_toMyBookings" outcome="/view/pages/registered/my_bookings.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.my_bookings']}
+                                        </h:link>
+                                    </li>
+                                    <li>
+                                        <h:link id="l_toMyRequests" outcome="/view/pages/registered/my_requests.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.my_requests']}
+                                        </h:link>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <h:commandLink id="cl_logout" action="#{headerBean.logout}" styleClass="dropdown-item text-danger">
+                                            #{msg['header.logout']}
+                                        </h:commandLink>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="#{userSessionBean.admin}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownAdmin" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    #{msg['header.administration']}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
+                                    <li>
+                                        <h:link id="l_toUserMgmt" outcome="/view/pages/admin/user_management.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.user_management']}
+                                        </h:link>
+                                    </li>
+                                    <li>
+                                        <h:link id="l_toRideMgmtAdmin" outcome="/view/pages/registered/my_rides.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.ride_management']}
+                                        </h:link>
+                                    </li>
+                                    <li>
+                                        <h:link id="l_toRequestMgmtAdmin" outcome="/view/pages/registered/my_requests.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.request_management']}
+                                        </h:link>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <h:link id="l_toSystemSettings" outcome="/view/pages/admin/system_settings.xhtml" styleClass="dropdown-item">
+                                            #{msg['header.system_settings']}
+                                        </h:link>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ui:fragment>
+
+                        <li class="nav-item ms-2">
+                            <h:commandButton id="cb_toggleHelp"
+                                             value="#{msg['header.help']}"
+                                             action="#{headerBean.toggleHelp()}"
+                                             styleClass="btn btn-outline-info ">
+                                <f:ajax execute="@this" render=":right-sidebar-wrapper" />
+                            </h:commandButton>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </h:form>
+
+</ui:composition>

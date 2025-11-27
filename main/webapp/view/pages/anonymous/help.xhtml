@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <div id="help-content">
+
+
+            <ui:repeat value="#{helpBean.helpKeys}" var="key">
+
+                <div class="alert alert-info mb-2 p-2" role="alert">
+                    <h:outputText value="#{msg[key]}" escape="false" />
+                </div>
+
+            </ui:repeat>
+
+            <ui:fragment rendered="#{empty helpBean.helpKeys}">
+                    <h:outputText value="#{msg['help.notfound']}" escape="false" />
+
+            </ui:fragment>
+
+
+    </div>
+
+</ui:composition>
